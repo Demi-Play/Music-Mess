@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-z@vj76ho4l_83-3&!%avo9jeut$j0(nov5sgjkf*m80vd*@e#f
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -37,7 +37,24 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
+    'projects',
+    'tasks',
+    'files',
+    'comments',
+    'chat',
 ]
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+import os
+
+# Корневая директория вашего проекта
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Папка для хранения загружаемых файлов
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -73,10 +90,17 @@ WSGI_APPLICATION = 'music_collab.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+import os
+from pathlib import Path
+
+# Определяем BASE_DIR
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Настройки базы данных
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # Теперь это работает корректно
     }
 }
 
@@ -115,7 +139,17 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
-STATIC_URL = 'static/'
+import os
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# URL для доступа к статическим файлам
+STATIC_URL = '/static/'
+
+# Путь к директории, где находятся статические файлы
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),  # Добавьте путь к вашей папке со статическими файлами
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

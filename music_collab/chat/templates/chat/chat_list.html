@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Список чатов{% endblock %}
+
+{% block content %}
+<h2>Список чатов</h2>
+<div class="list-group">
+    {% for chat in chats %}
+        <a href="{% url 'chat:chat_detail' chat.id %}" class="list-group-item list-group-item-action">{{ chat.project.name }}</a>
+    {% endfor %}
+</div>
+<a href="{% url 'chat:chat_create' %}" class="btn btn-primary mt-3">Создать новый чат</a>
+{% endblock %}

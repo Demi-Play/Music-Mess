@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ project.name }}{% endblock %}
+
+{% block content %}
+<h2>{{ project.name }}</h2>
+<p>{{ project.description }}</p>
+
+<h3>Задачи</h3>
+<ul>
+    {% for task in project.tasks.all %}
+        <li>
+            {{ task.title }} - 
+            <a href="{% url 'tasks:task_edit' project.id task.id %}">Редактировать</a> 
+            (Статус: {{ task.get_status_display }})
+            {% if task.due_date %}
+                - Срок: {{ task.due_date|date:"Y-m-d H:i" }}
+            {% endif %}
+        </li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'tasks:task_create' project.id %}" class="btn btn-primary">Добавить новую задачу</a>
+<a href="{% url 'projects:request_join' project.id %}" class="btn btn-secondary">Отправить запрос на вхождение</a>
+<a href="{% url 'projects:project_list' %}" class="btn btn-secondary">Назад к списку проектов</a>
+{% endblock %}

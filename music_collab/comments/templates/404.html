@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Страница не найдена (404){% endblock %}
+
+{% block content %}
+
+<div class="container text-center mt-5">
+    <h1 class="display-4">Ошибка 404</h1>
+    <p class="lead">Страница, которую вы ищете, не найдена.</p>
+    <a href="{% url 'home' %}" class="btn btn-primary">На главную страницу</a>
+    <a href="{% url 'users:register' %}" class="btn btn-secondary">Регистрация</a>
+    <a href="{% url 'users:login' %}" class="btn btn-secondary">Вход</a>
+</div>
+
+{% endblock %}

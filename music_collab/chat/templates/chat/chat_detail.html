@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Чат для проекта: {{ chat.project.name }}{% endblock %}
+
+{% block content %}
+<h2>Чат для проекта: {{ chat.project.name }}</h2>
+
+<div class="message-container">
+    <ul class="list-group mb-3">
+        {% for message in messages %}
+        <li class="list-group-item">
+            <strong>{{ message.sender.username }}:</strong> {{ message.content }} ({{ message.created_at }})
+        </li>
+        {% endfor %}
+    </ul>
+</div>
+
+<style>
+    .message-container {
+        max-height: 450px; /* Ограничиваем высоту контейнера */
+        overflow-y: auto; /* Добавляем вертикальную прокрутку */
+        border: 1px solid #ccc; /* Добавляем рамку для визуального отделения */
+        padding: 10px; /* Добавляем отступы */
+        margin-bottom: 20px; /* Отступ снизу */
+    }
+</style>
+
+<div class="btn-group mb-3" role="group" aria-label="Basic example">
+    <button type="button" class="btn btn-success" id="sendTextMessage">Отправить текстовое сообщение</button>
+    <button type="button" class="btn btn-warning" id="sendVideoCall">Видеозвонок</button>
+    <button type="button" class="btn btn-info" id="sendVoiceCall">Звонок</button>
+</div>
+
+<form id="messageForm" method="post" style="display: none;">
+    {% csrf_token %}
+    <input type="text" name="content" placeholder="Введите сообщение..." required />
+    <button type="submit" class="btn btn-primary">Отправить сообщение</button>
+</form>
+
+<a href="{% url 'chat:chat_list' %}" class="btn btn-secondary mt-3">Назад к списку чатов</a>
+
+<script>
+    document.getElementById('sendTextMessage').onclick = function () {
+        document.getElementById('messageForm').style.display = 'block';
+    };
+
+    document.getElementById('messageForm').onsubmit = function (event) {
+        event.preventDefault();
+
+        // Здесь вы можете добавить AJAX-запрос для отправки сообщения
+        // Пример:
+        const formData = new FormData(this);
+
+        fetch("{% url 'chat:chat_detail' chat.id %}", {
+            method: "POST",
+            body: formData,
+            headers: {
+                "X-CSRFToken": '{{ csrf_token }}'
+            }
+        }).then(response => {
+            if (response.ok) {
+                location.reload();  // Перезагружаем страницу после успешной отправки
+            }
+        });
+    };
+</script>
+
+{% endblock %}

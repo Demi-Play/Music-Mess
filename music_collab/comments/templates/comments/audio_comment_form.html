@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавление комментария{% endblock %}
+
+{% block content %}
+<h2>Добавление комментария</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Добавить комментарий</button>
+</form>
+<a href="{% url 'comments:audio_comment_list' %}">Назад к списку комментариев</a>
+{% endblock %}

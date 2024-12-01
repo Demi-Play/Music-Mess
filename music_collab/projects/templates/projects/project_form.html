@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Создание проекта{% endblock %}
+
+{% block content %}
+<h2>Создание проекта</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Создать проект</button>
+</form>
+<a href="{% url 'projects:project_list' %}">Назад к списку проектов</a>
+{% endblock %}

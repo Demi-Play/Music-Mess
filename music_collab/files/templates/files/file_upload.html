@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Загрузка файла{% endblock %}
+
+{% block content %}
+<h2>Загрузка файла</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Загрузить файл</button>
+</form>
+<a href="{% url 'files:file_list' %}">Назад к списку файлов</a>
+{% endblock %}

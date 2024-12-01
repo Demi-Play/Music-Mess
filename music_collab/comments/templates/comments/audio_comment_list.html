@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Список комментариев{% endblock %}
+
+{% block content %}
+<h2>Список комментариев</h2>
+<ul>
+    {% for comment in comments %}
+        <li>{{ comment.text }} - {{ comment.user.username }} ({{ comment.created_at }})</li>
+    {% endfor %}
+</ul>
+<a href="{% url 'comments:audio_comment_create' %}">Добавить новый комментарий</a>
+{% endblock %}

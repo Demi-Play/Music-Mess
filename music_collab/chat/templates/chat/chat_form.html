@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Создание чата{% endblock %}
+
+{% block content %}
+<h2>Создание нового чата</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    
+    <label for="project">Выберите проект:</label>
+    <select name="project" required>
+        {% for project in projects %}
+            <option value="{{ project.id }}">{{ project.name }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Создать чат</button>
+</form>
+<a href="{% url 'chat:chat_list' %}">Назад к списку чатов</a>
+{% endblock %}

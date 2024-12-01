@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Добавление/Редактирование аудио материала{% endblock %}
+
+{% block content %}
+<h2>{% if form.instance.pk %}Редактирование{% else %}Добавление{% endif %} аудио материала</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+<a href="{% url 'projects:project_detail' project_id %}" class="btn btn-secondary">Отмена</a>  <!-- Передаем project_id -->
+{% endblock %}

@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="jumbotron text-center">
+    <h1 class="display-4">Добро пожаловать в Music Collaboration!</h1>
+    <p class="lead">Платформа для коллаборации музыкантов и продюсеров.</p>
+    <hr class="my-4">
+    <p>Мы помогаем упростить вашу работу и сделать процесс создания музыки более эффективным.</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'projects:project_list' %}" role="button">Начать</a>
+</div>
+
+<div class="container">
+    <h2>Что мы предлагаем?</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img src="{% static 'images/collaboration.jpg' %}" class="card-img-top" alt="Коллаборация" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">Коллаборация</h5>
+                    <p class="card-text">Работайте вместе с другими музыкантами и продюсерами над вашими проектами.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img src="{% static 'images/communication.jpg' %}" class="card-img-top" alt="Коммуникация" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">Коммуникация</h5>
+                    <p class="card-text">Общайтесь с коллегами через чаты и обсуждайте идеи в реальном времени.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img src="{% static 'images/creativity.jpg' %}" class="card-img-top" alt="Творчество" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title">Творчество</h5>
+                    <p class="card-text">Создавайте уникальную музыку, используя наши инструменты и ресурсы.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.jumbotron {
+    background-color: #f8f9fa;
+    padding: 2rem 1rem;
+}
+
+.card {
+    border: none;
+}
+</style>
+
+{% endblock %}
