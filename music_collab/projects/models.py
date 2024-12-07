@@ -17,6 +17,7 @@ class Project(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=50, choices=STATUS_CHOICES)
+    sequencer_data = models.JSONField(default=dict, blank=True)  # Для хранения данных секвенсора
 
     def __str__(self):
         return self.name
@@ -39,3 +40,4 @@ class JoinRequest(models.Model):
 
     def __str__(self):
         return f"{self.user.username} requests to join {self.project.name}"
+    

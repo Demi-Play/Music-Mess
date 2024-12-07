@@ -29,5 +29,6 @@ urlpatterns = [
     path('files/', include('files.urls')),
     path('comments/', include('comments.urls')),
     path('chat/', include('chat.urls')),
+    # path('sequences/', include('sequencer.urls')),
 ]
 

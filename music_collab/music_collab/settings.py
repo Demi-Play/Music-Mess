@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-z@vj76ho4l_83-3&!%avo9jeut$j0(nov5sgjkf*m80vd*@e#f'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'files',
     'comments',
     'chat',
+    'version_control',
 ]
 
 AUTH_USER_MODEL = 'users.CustomUser'
