@@ -9,7 +9,12 @@
     <p class="lead">Платформа для коллаборации музыкантов и продюсеров.</p>
     <hr class="my-4">
     <p>Мы помогаем упростить вашу работу и сделать процесс создания музыки более эффективным.</p>
+    {% if user.is_authenticated %}
+
     <a class="btn btn-primary btn-lg" href="{% url 'projects:project_list' %}" role="button">Начать</a>
+    {% else %}
+    <a class="btn btn-primary btn-lg" href="{% url 'users:login' %}" role="button">Начать</a>
+    {% endif %}
 </div>
 
 <div class="container">
