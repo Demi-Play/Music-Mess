@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Доступ запрещен{% endblock %}
+
+{% block content %}
+
+<div class="container text-center mt-5">
+    <h1 class="display-4">Ошибка 403</h1>
+    <p>У вас нет доступа к этой странице.</p>
+
+    {% if project %}
+        <p>Вы можете отправить запрос на вхождение в проект {{ project.name }}.</p>
+        <form method="post" action="{% url 'projects:request_join' project.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary">Отправить запрос</button>
+        </form>
+    {% endif %}
+
+    <a href="{% url 'home' %}" class="btn btn-primary">На главную страницу</a>
+</div>
+{% endblock %}

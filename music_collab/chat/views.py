@@ -1,5 +1,7 @@
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
+from flask import json
 from .models import Chat, Message
 from .forms import MessageForm, ChatForm
 from projects.models import Project
@@ -39,20 +41,38 @@ class ChatDetailView(View):
 
     def post(self, request, pk):
         chat = get_object_or_404(Chat, pk=pk)
-        
-        # Получаем тип сообщения из кнопки
-        if request.POST.get('content'):
-            message_type = 'text'
-            content = request.POST['content']
-        elif request.POST.get('video_call'):
-            message_type = 'video_call'
-            content = "Видеозвонок начат."
-        elif request.POST.get('voice_call'):
-            message_type = 'call'
-            content = "Звонок начат."
 
-        # Создаем новое сообщение
-        message = Message(chat=chat, sender=request.user, content=content, message_type=message_type)
-        message.save()
+        # Отправка нового сообщения
+        if request.POST.get('content'):
+            content = request.POST['content']
+            message_type = 'text'
+            
+            # Создаем новое сообщение
+            message = Message(chat=chat, sender=request.user, content=content, message_type=message_type)
+            message.save()
+            return redirect('chat:chat_detail', pk=pk)
+
+class EditMessageView(View):
+    @method_decorator(login_required)
+    def post(self, request, message_id):
+        message = get_object_or_404(Message, pk=message_id)
+
+        if message.sender == request.user:
+            content = request.POST.get('content')
+            message.content = content
+            message.save()
+            
+            return JsonResponse({'success': True, 'new_content': content})
         
-        return redirect('chat:chat_detail', pk=pk)
+        return JsonResponse({'success': False}, status=400)
+
+class DeleteMessageView(View):
+    @method_decorator(login_required)
+    def post(self, request, message_id):
+        message = get_object_or_404(Message, pk=message_id)
+
+        if message.sender == request.user:
+            chat_pk = message.chat.pk
+            message.delete()
+
+        return redirect('chat:chat_detail', pk=chat_pk)

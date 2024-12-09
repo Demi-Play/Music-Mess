@@ -11,8 +11,8 @@ class File(models.Model):
         ('preset', 'Пресет'),
     ]
     id = models.AutoField(primary_key=True)
-    file = models.FileField(upload_to='uploads/')  # Файлы будут сохраняться в media/uploads/
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
+    file = models.FileField(upload_to='audio/')  # Файлы будут сохраняться в media/audio/
+    project = models.ForeignKey(Project, on_delete=models.CASCADE, null=True)
     uploaded_by = models.ForeignKey(User, on_delete=models.CASCADE)
     file_type = models.CharField(max_length=50, choices=FILE_TYPE_CHOICES)
     uploaded_at = models.DateTimeField(auto_now_add=True)

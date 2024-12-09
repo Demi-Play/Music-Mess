@@ -6,10 +6,21 @@
 <h2>Чат для проекта: {{ chat.project.name }}</h2>
 
 <div class="message-container">
-    <ul class="list-group mb-3">
+    <ul class="list-group mb-3" id="messageList">
         {% for message in messages %}
-        <li class="list-group-item">
-            <strong>{{ message.sender.username }}:</strong> {{ message.content }} ({{ message.created_at }})
+        <li class="list-group-item" id="message-{{ message.id }}">
+            <strong>{{ message.sender.username }}:</strong> 
+            <span class="message-content">{{ message.content }}</span> 
+            <span class="timestamp">({{ message.created_at }})</span>
+            {% if message.sender == user %}
+                <!-- Кнопка для открытия модального окна редактирования -->
+                <button class="btn btn-link edit-message" data-id="{{ message.id }}" data-content="{{ message.content }}">Редактировать</button>
+                <!-- Форма для удаления сообщения -->
+                <form method="post" action="{% url 'chat:delete_message' message.id %}" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-link text-danger">Удалить</button>
+                </form>
+            {% endif %}
         </li>
         {% endfor %}
     </ul>
@@ -25,44 +36,150 @@
     }
 </style>
 
-<div class="btn-group mb-3" role="group" aria-label="Basic example">
-    <button type="button" class="btn btn-success" id="sendTextMessage">Отправить текстовое сообщение</button>
-    <button type="button" class="btn btn-warning" id="sendVideoCall">Видеозвонок</button>
-    <button type="button" class="btn btn-info" id="sendVoiceCall">Звонок</button>
-</div>
-
-<form id="messageForm" method="post" style="display: none;">
+<!-- Форма для отправки сообщения -->
+<form id="messageForm" method="post">
     {% csrf_token %}
-    <input type="text" name="content" placeholder="Введите сообщение..." required />
+    <input type="text" name="content" id="newMessageContent" placeholder="Введите сообщение..." required />
+    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#emojiModal">Выбрать эмодзи</button>
     <button type="submit" class="btn btn-primary">Отправить сообщение</button>
 </form>
 
 <a href="{% url 'chat:chat_list' %}" class="btn btn-secondary mt-3">Назад к списку чатов</a>
 
+<!-- Модальное окно для редактирования сообщения -->
+<div class="modal fade" id="editMessageModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Редактировать сообщение</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editMessageForm" method="post">
+                    {% csrf_token %}
+                    <input type="hidden" id="editMessageId" name="message_id">
+                    <textarea id="editMessageContent" name="content" rows="4"></textarea>
+                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#emojiModalEdit">Выбрать эмодзи</button>
+                    <button type="submit" class="btn btn-primary mt-2">Сохранить изменения</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для выбора эмодзи -->
+<div class="modal fade" id="emojiModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Выберите эмодзи</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <button class='emoji-picker2' data-emoji='😊'>😊</button>
+                <button class='emoji-picker2' data-emoji='😢'>😢</button>
+                <button class='emoji-picker2' data-emoji='😂'>😂</button>
+                <button class='emoji-picker2' data-emoji='😡'>😡</button>
+                <button class='emoji-picker2' data-emoji='😍'>😍</button>
+                <button class='emoji-picker2' data-emoji='😎'>😎</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модальное окно для выбора эмодзи при редактировании -->
+<div class="modal fade" id="emojiModalEdit" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class='modal-title'>Выберите эмодзи для редактирования</h5>
+                <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+                    <span aria-hidden='true'>&times;</span>
+                </button>
+            </div>
+            <div class='modal-body'>
+                <!-- Эмодзи для редактирования -->
+                <button class='emoji-picker1' data-emoji='😊'>😊</button>
+                <button class='emoji-picker1' data-emoji='😢'>😢</button>
+                <button class='emoji-picker1' data-emoji='😂'>😂</button>
+                <button class='emoji-picker1' data-emoji='😡'>😡</button>
+                <button class='emoji-picker1' data-emoji='😍'>😍</button>
+                <button class='emoji-picker1' data-emoji='😎'>😎</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
-    document.getElementById('sendTextMessage').onclick = function () {
-        document.getElementById('messageForm').style.display = 'block';
+// Открытие модального окна и заполнение полей
+document.querySelectorAll('.edit-message').forEach(button => {
+    button.onclick = function () {
+        const messageId = this.getAttribute('data-id');
+        const messageContent = this.getAttribute('data-content');
+        
+        document.getElementById('editMessageId').value = messageId;
+        document.getElementById('editMessageContent').value = messageContent;
+        $('#editMessageModal').modal('show');
     };
+});
 
-    document.getElementById('messageForm').onsubmit = function (event) {
-        event.preventDefault();
+// Обработка отправки формы редактирования
+document.getElementById('editMessageForm').onsubmit = function (event) {
+    event.preventDefault(); // Предотвращаем перезагрузку страницы
 
-        // Здесь вы можете добавить AJAX-запрос для отправки сообщения
-        // Пример:
-        const formData = new FormData(this);
+    const formData = new FormData(this);
+    const messageId = document.getElementById('editMessageId').value;
 
-        fetch("{% url 'chat:chat_detail' chat.id %}", {
-            method: "POST",
-            body: formData,
-            headers: {
-                "X-CSRFToken": '{{ csrf_token }}'
-            }
-        }).then(response => {
-            if (response.ok) {
-                location.reload();  // Перезагружаем страницу после успешной отправки
-            }
-        });
+    fetch(`/chat/messages/${messageId}/edit/`, {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+        }
+    }).then(response => {
+        if (response.ok) {
+            return response.json();
+        }
+    }).then(data => {
+        if (data.success) {
+            const messageItem = document.getElementById(`message-${messageId}`);
+            messageItem.querySelector('.message-content').innerText = data.new_content;
+            $('#editMessageModal').modal('hide'); // Закрываем модальное окно
+        }
+    });
+};
+
+// Добавление функционала выбора эмодзи
+
+document.querySelectorAll('.emoji-picker1').forEach(picker => {
+    picker.onclick = function () {
+        const emoji = this.getAttribute('data-emoji');
+        // Проверяем, где мы находимся (в форме создания или редактирования)
+        const inputField = document.activeElement === document.getElementById('editMessageContent') 
+                            ? document.getElementById('newMessageContent') 
+                            : document.getElementById('editMessageContent');
+        
+        inputField.value += emoji; // Добавляем выбранный эмодзи в поле ввода
+        $('#emojiModal').modal('hide'); // Закрываем модальное окно выбора смайлов
     };
+});
+
+document.querySelectorAll('.emoji-picker2').forEach(picker => {
+    picker.onclick = function () {
+        const emoji = this.getAttribute('data-emoji');
+        // Проверяем, где мы находимся (в форме создания или редактирования)
+        const inputField = document.activeElement === document.getElementById('newMessageContent') 
+                            ? document.getElementById('editMessageContent') 
+                            : document.getElementById('newMessageContent');
+        
+        inputField.value += emoji; // Добавляем выбранный эмодзи в поле ввода
+        $('#emojiModal').modal('hide'); // Закрываем модальное окно выбора смайлов
+    };
+});
 </script>
 
 {% endblock %}

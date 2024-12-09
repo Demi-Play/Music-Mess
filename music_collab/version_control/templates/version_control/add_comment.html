@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Добавление комментария к файлу: {{ file.file.name }}</h1>
+<form method="post">
+    {% csrf_token %}
+    <textarea name="text" rows="4" cols="50" placeholder="Ваш комментарий..."></textarea><br>
+    <input type="hidden" name="timestamp" value="{{ timestamp }}">
+    <button type="submit" class="btn btn-primary">Добавить комментарий</button>
+</form>
+
+<a href="{% url 'version_control:file_list' file.project.id %}" class="btn btn-secondary">Назад к списку файлов</a>
+{% endblock %}

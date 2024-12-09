@@ -21,6 +21,14 @@
 </ul>
 
 <a href="{% url 'tasks:task_create' project.id %}" class="btn btn-primary">Добавить новую задачу</a>
-<a href="{% url 'projects:request_join' project.id %}" class="btn btn-secondary">Отправить запрос на вхождение</a>
 <a href="{% url 'projects:project_list' %}" class="btn btn-secondary">Назад к списку проектов</a>
+
+<hr>
+
+<h3>Аудиофайлы</h3>
+
+
+<a href="{% url 'version_control:file_list' project.id %}" class="btn btn-primary">Просмотреть аудиофайлы</a>
+<a href="{% url 'version_control:upload_file' project.id %}" class="btn btn-primary">Загрузить новый аудиофайл</a>
+
 {% endblock %}

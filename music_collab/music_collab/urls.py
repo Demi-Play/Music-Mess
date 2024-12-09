@@ -30,5 +30,8 @@ urlpatterns = [
     path('comments/', include('comments.urls')),
     path('chat/', include('chat.urls')),
     # path('sequences/', include('sequencer.urls')),
+    path('version-control/', include('version_control.urls')),
 ]
 
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

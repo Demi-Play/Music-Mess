@@ -6,7 +6,7 @@
 <h2>Список файлов</h2>
 <ul>
     {% for file in files %}
-        <li>{{ file.file_path }}</li> <!-- Выводите нужные поля -->
+        <li><audio>{{ file.file_path }}</audio></li> <!-- Выводите нужные поля -->
     {% endfor %}
 </ul>
 <a href="{% url 'files:file_upload' %}">Загрузить новый файл</a>

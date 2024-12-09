@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
+
+from files.models import File
 from .models import Project, JoinRequest
 from .forms import ProjectForm
 from django.contrib.auth.decorators import login_required
@@ -19,8 +21,9 @@ class ProjectListView(View):
 class ProjectDetailView(View):
     def get(self, request, pk):
         project = get_object_or_404(Project, pk=pk)
+        files = File.objects.filter(project=project)
         audio_materials = project.audio_materials.all()
-        return render(request, 'projects/project_detail.html', {'project': project, 'audio_materials': audio_materials})
+        return render(request, 'projects/project_detail.html', {'project': project, 'files': files})
 
 @method_decorator(login_required, name='dispatch')
 class AudioMaterialCreateView(View):

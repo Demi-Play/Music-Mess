@@ -1,5 +1,5 @@
 from django import forms
-from ..files.models import File
+from files.models import File
 
 class FileUploadForm(forms.ModelForm):
     class Meta:
