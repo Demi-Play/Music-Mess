@@ -24,8 +24,8 @@
 1. **Клонируйте репозиторий**:
 
    ```bash
-   git clone <URL вашего репозитория>
-   cd <имя папки с проектом>
+   git clone 'https://github.com/Demi-Play/Music-Mess.git'
+   cd music_collab
    ```
 
 2. **Установите зависимости**:
