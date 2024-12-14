@@ -9,6 +9,8 @@ from django.utils.decorators import method_decorator
 from .models import Project, AudioMaterial
 from .forms import AudioMaterialForm
 
+
+
 @method_decorator(login_required, name='dispatch')
 class ProjectListView(View):
     def get(self, request):
@@ -23,8 +25,48 @@ class ProjectDetailView(View):
         project = get_object_or_404(Project, pk=pk)
         files = File.objects.filter(project=project)
         audio_materials = project.audio_materials.all()
-        return render(request, 'projects/project_detail.html', {'project': project, 'files': files})
+        current_user = request.user
+        return render(request, 'projects/project_detail.html', {
+            'project': project,
+            'files': files,
+            'audio_materials': audio_materials,
+            'current_user': current_user  # Передаем текущего пользователя в контекст
+        })
+        
+@method_decorator(login_required, name='dispatch')
+class ProjectEditView(View):
+    def get(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        form = ProjectForm(instance=project)  # Создаем форму с текущими данными проекта
+        return render(request, 'projects/project_edit.html', {'form': form, 'project': project})
 
+    def post(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        form = ProjectForm(request.POST, instance=project)  # Заполняем форму данными из POST-запроса
+
+        if form.is_valid():
+            form.save()  # Сохраняем изменения в проекте
+            return redirect('projects:project_detail', pk=project.pk)  # Перенаправляем на страницу проекта
+
+        return render(request, 'projects/project_edit.html', {'form': form, 'project': project})
+    
+from django.contrib import messages
+    
+@method_decorator(login_required, name='dispatch')
+class ProjectDeleteView(View):
+    def post(self, request, pk):
+        project = get_object_or_404(Project, pk=pk)
+        
+        # Убедитесь, что текущий пользователь является владельцем проекта
+        if project.owner == request.user:
+            project.delete()  # Удаляем проект
+            messages.success(request, "Проект успешно удален.")
+            return redirect('projects:project_list')  # Перенаправляем на список проектов
+        
+        messages.error(request, "У вас нет прав для удаления этого проекта.")
+        return redirect('projects:project_detail', pk=project.pk)
+        
+        
 @method_decorator(login_required, name='dispatch')
 class AudioMaterialCreateView(View):
     def get(self, request, project_id):
@@ -73,6 +115,8 @@ class ProjectCreateView(View):
 @login_required
 def project_detail(request, pk):
     project = get_object_or_404(Project, pk=pk)
+    join_request = get_object_or_404(JoinRequest, pk=pk)
+    
 
     # Проверяем доступ пользователя
     if request.user != project.owner and not project.join_requests.filter(user=request.user, confirmed=True).exists():
