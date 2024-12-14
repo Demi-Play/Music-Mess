@@ -29,3 +29,30 @@ class Message(models.Model):
 
     def __str__(self):
         return f"Message from {self.sender.username} in chat {self.chat.id}"
+    
+
+def create_chats():
+    chats = [
+        {'project_id':4},
+        {'project_id':5},
+        {'project_id':6},
+        # Добавьте остальные чаты...
+    ]
+
+    for chat_data in chats:
+        Chat.objects.create(**chat_data)
+
+# create_chats()
+
+
+
+def create_messages():
+    messages = [
+        {'chat_id':1,'sender_id':1,'content':'Hello everyone!','message_type':'text'},
+        # Добавьте остальные сообщения...
+    ]
+
+    for message_data in messages:
+        Message.objects.create(**message_data)
+
+# create_messages()

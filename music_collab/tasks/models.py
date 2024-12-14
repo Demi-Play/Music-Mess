@@ -21,3 +21,22 @@ class Task(models.Model):
 
     def __str__(self):
         return self.title
+    
+from django.utils import timezone
+
+def create_tasks():
+    tasks = [
+        {'project_id': 4,'title':'Task A1','description':'Description for Task A1','assignee_id':1,'status':'new','due_date':timezone.now() + timezone.timedelta(days=7)},
+        {'project_id': 5,'title':'Task A2','description':'Description for Task A2','assignee_id':2,'status':'new','due_date':timezone.now() + timezone.timedelta(days=14)},
+        {'project_id': 6,'title':'Task B1','description':'Description for Task B1','assignee_id':3,'status':'in_progress','due_date':timezone.now() + timezone.timedelta(days=10)},
+        {'project_id': 7,'title':'Task A1','description':'Description for Task A1','assignee_id':4,'status':'in_progress','due_date':timezone.now() + timezone.timedelta(days=10)},
+        {'project_id': 8,'title':'Task B1','description':'Description for Task B1','assignee_id':2,'status':'in_progress','due_date':timezone.now() + timezone.timedelta(days=10)},
+        {'project_id': 9,'title':'Task C2','description':'Description for Task C2','assignee_id':6,'status':'in_progress','due_date':timezone.now() + timezone.timedelta(days=10)},
+        {'project_id': 10,'title':'Task C1','description':'Description for Task C1','assignee_id':5,'status':'in_progress','due_date':timezone.now() + timezone.timedelta(days=10)},
+        # Добавьте остальные задачи...
+    ]
+
+    for task_data in tasks:
+        Task.objects.create(**task_data)
+
+# create_tasks()

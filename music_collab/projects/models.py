@@ -41,3 +41,31 @@ class JoinRequest(models.Model):
     def __str__(self):
         return f"{self.user.username} requests to join {self.project.name}"
     
+
+def create_projects():
+    projects = [
+        {'name': "Project Alpha", 'description' : "First project description", 'owner_id' : 1, 'status' : "in_progress"},
+        {'name' : "Project Beta", 'description' : "Second project description", 'owner_id' : 2, 'status' : "in_progress"},
+        {'name' : "Project Gamma", 'description' : "Third project description", 'owner_id' : 3, 'status' : "completed"},
+        {'name' : "Project Delta", 'description' : "Fourth project description", 'owner_id' : 4, 'status' : "in_progress"},
+        {'name' : "Project Epsilon", 'description' : "Fifth project description", 'owner_id' : 5, 'status' : "completed"},
+    ]
+
+    for project_data in projects:
+        Project.objects.create(**project_data)
+
+# create_projects()
+
+
+def create_audio_materials():
+    audio_materials = [
+        {'project_id':3,'title':'Audio Track A1','audio_file':'audio/lazarus.mp3'},
+        {'project_id':4,'title':'Audio Track A2','audio_file':'audio/was_hatneen.mp3'},
+        # Добавьте остальные аудиоматериалы...
+    ]
+
+    for audio_material_data in audio_materials:
+        AudioMaterial.objects.create(**audio_material_data)
+
+# create_audio_materials()
+

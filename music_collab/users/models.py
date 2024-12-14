@@ -20,3 +20,26 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f"{self.username}, {self.email}, {self.role}"
+    
+# from django.utils import timezone
+
+# def create_users():
+#     users = [
+#         {'username': 'producer1', 'password_hash': 'hashed_password1', 'role': 'producer', 'email': 'producer1@example.com', 'status': 'active'},
+#         {'username': 'musician1', 'password_hash': 'hashed_password2', 'role': 'musician', 'email': 'musician1@example.com', 'status': 'active'},
+#         {'username': 'vocalist1', 'password_hash': 'hashed_password3', 'role': 'vocalist', 'email': 'vocalist1@example.com', 'status': 'active'},
+#         {'username': 'producer2', 'password_hash': 'hashed_password4', 'role': 'producer', 'email': 'producer2@example.com', 'status': 'active'},
+#         {'username': 'musician2', 'password_hash': 'hashed_password5', 'role': 'musician', 'email': 'musician2@example.com', 'status': 'active'},
+#         {'username': 'vocalist2', 'password_hash': 'hashed_password6', 'role': 'vocalist', 'email': 'vocalist2@example.com', 'status': 'active'},
+#         {'username': 'producer3', 'password_hash': 'hashed_password7', 'role': 'producer', 'email': 'producer3@example.com', 'status': 'active'},
+#         {'username': 'musician3', 'password_hash': 'hashed_password8', 'role': 'musician', 'email': 'musician3@example.com',  'status':'active'},
+#         {'username': 'vocalist3','password_hash':'hashed_password9','role':'vocalist','email':'vocalist3@example.com','status':'active'},
+#         {'username':'producer4','password_hash':'hashed_password10','role':'producer','email':'producer4@example.com','status':'active'},
+#     ]
+
+#     for user_data in users:
+#         user = CustomUser(**user_data)
+#         user.set_password(user_data['password_hash'])  # Убедитесь, что вы используете метод для установки пароля
+#         user.save()
+
+# create_users()
